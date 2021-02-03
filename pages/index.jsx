@@ -1,31 +1,22 @@
-import Layout from '../components/layout'
-import utilStyles from '../styles/utils.module.css'
-import fetchAPI from '../lib/gamePassClient'
 import { map, pick, pipe } from 'ramda'
+import { fetchGamePassGames } from '../clients/gamePassClient'
 
-export default function Home({ data }) {
-  const selectedData = pipe(map(pick(['LocalizedProperties'])))(data)
+export default function Home({ gamePassGames }) {
+  const data = pipe(map(pick(['LocalizedProperties'])))(gamePassGames)
 
   return (
-    <Layout home>
-      <section className={utilStyles.headingMd}>
-        {JSON.stringify(selectedData, null, 2)}
-        <p>[Your Self Introduction]</p>
-        <p>
-          (This is a sample website - you’ll be building a site like this in{' '}
-          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-        </p>
-      </section>
-    </Layout>
+    <>
+      <h1>Game Pass Critic</h1>
+      <div>{JSON.stringify(data, null, 2)}</div>
+    </>
   )
 }
 
 export const getStaticProps = async () => {
-  const data = await fetchAPI()
+  const gamePassGames = await fetchGamePassGames()
   return {
     props: {
-      data,
+      gamePassGames,
     },
-    revalidate: 5,
   }
 }
