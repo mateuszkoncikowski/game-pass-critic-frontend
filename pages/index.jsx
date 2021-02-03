@@ -1,4 +1,6 @@
+import { Heading } from '@chakra-ui/react'
 import { map, pick, pipe } from 'ramda'
+
 import { fetchGamePassGames } from '../clients/gamePassClient'
 
 export default function Home({ gamePassGames }) {
@@ -6,8 +8,8 @@ export default function Home({ gamePassGames }) {
 
   return (
     <>
-      <h1>Game Pass Critic</h1>
-      <div>{JSON.stringify(data, null, 2)}</div>
+      <Heading>Game Pass Critic</Heading>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </>
   )
 }

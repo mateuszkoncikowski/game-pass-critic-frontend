@@ -2,8 +2,13 @@
   "extends": ["plugin:react/recommended", "plugin:prettier/recommended"],
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "sort-imports": "off",
+    "import/order": "off"
   },
+  "plugins": ["simple-import-sort"],
   "globals": {
     "React": "writable"
   },
