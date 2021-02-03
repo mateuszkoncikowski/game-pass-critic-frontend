@@ -1,8 +1,8 @@
 import Head from "next/head";
-import Layout, {siteTitle} from "../components/layout";
+import Layout, { siteTitle } from "../components/layout";
 import utilStyles from "../styles/utils.module.css";
 import fetchAPI from "../lib/api";
-import {map, pick, pipe} from "ramda";
+import { map, pick, pipe } from "ramda";
 
 export default function Home({ data }) {
   const selectedData = pipe(map(pick(["LocalizedProperties"])))(data);
