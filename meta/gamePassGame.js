@@ -10,3 +10,5 @@ export const getPosterImageUrl = pipe(
 )
 
 export const getTitle = pipe(getLocalizedProps, prop('ProductTitle'))
+
+export const getGameId = prop('ProductId')

@@ -1,16 +1,17 @@
 import { Box, Container, Heading, Img, SimpleGrid } from '@chakra-ui/react'
 
 import { fetchGamePassGames } from '../clients/gamePassClient'
-import { getPosterImageUrl, getTitle } from '../meta/gamePassGame'
+import { getGameId, getPosterImageUrl, getTitle } from '../meta/gamePassGame'
 
 export default function Home({ gamePassGames }) {
   return (
     <Container maxW="960px">
       <Heading my={10}>Game Pass Critic</Heading>
       <SimpleGrid columns={3} spacing={5}>
-        {gamePassGames.map((game, index) => {
+        {gamePassGames.map((game) => {
           return (
-            <Box key={index} height="100%">
+            <Box key={getGameId(game)} height="100%">
+              <Box>{getTitle(game)}</Box>
               <Img
                 alt={getTitle(game)}
                 borderRadius="5px"
