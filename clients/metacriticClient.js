@@ -9,7 +9,10 @@ export async function getGameScore(gameIds) {
     for (let i = 0; i < gameIds.length; i++) {
       const URL = `https://www.metacritic.com/game/pc/${gameIds[i]}`
       const page = await browser.newPage()
-      await page.goto(URL)
+      await page.goto(URL, {
+        waitUntil: 'load',
+        timeout: 0,
+      })
       const element = await page.$('.main_details .metascore_w')
       const value = await page.evaluate((el) => el.textContent, element)
       scores.push(value)
