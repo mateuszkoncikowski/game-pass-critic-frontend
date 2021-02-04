@@ -1,31 +1,31 @@
 import { Box } from '@chakra-ui/react'
+import { map, pipe } from 'ramda'
 
 import { fetchGamePassGames } from '../clients/gamePassClient'
-import { getGameScore } from '../clients/metacriticClient'
+import { getGameId, getTitle } from '../meta/gamePassGame'
 
-export default function Json({ gamePassGames, gameScore }) {
+export default function Json({ gamePassGames }) {
+  const getId = (game) => ({
+    title: getTitle(game),
+    gamePassId: getGameId(game),
+    metaCritic: '',
+  })
+
+  const games = pipe(map(getId))(gamePassGames)
+
   return (
     <Box fontSize="xs">
-      <div>
-        {gameScore.map((s) => (
-          <div key={s}>{s}</div>
-        ))}
-      </div>
-      <pre>{JSON.stringify(gamePassGames[0], null, 2)}</pre>
+      <pre>{JSON.stringify(gamePassGames, null, 2)}</pre>
+      <pre>{JSON.stringify(games, null, 2)}</pre>
     </Box>
   )
 }
 
 export const getStaticProps = async () => {
   const gamePassGames = await fetchGamePassGames()
-  const gameScore = await getGameScore([
-    'age-of-empires-iii-definitive-edition',
-    'spelunky-2',
-  ])
   return {
     props: {
       gamePassGames,
-      gameScore,
     },
   }
 }
