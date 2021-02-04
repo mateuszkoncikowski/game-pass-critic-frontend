@@ -10,7 +10,7 @@ export default function Home({ gamePassGames }) {
       <SimpleGrid columns={3} spacing={5}>
         {gamePassGames.map((game) => {
           return (
-            <Box key={getGameId(game)} height="100%">
+            <Box fontSize="xs" key={getGameId(game)} height="100%">
               <Box>{getTitle(game)}</Box>
               <Img
                 alt={getTitle(game)}
