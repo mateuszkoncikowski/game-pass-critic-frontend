@@ -1,4 +1,5 @@
 import { join, map, pipe, prop, tail } from 'ramda'
+
 import {
   getGamesContentUrl,
   getGamesListUrl,

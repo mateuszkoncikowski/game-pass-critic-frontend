@@ -1,16 +1,26 @@
-import { Heading } from '@chakra-ui/react'
-import { map, pick, pipe } from 'ramda'
+import { Box, Container, Heading, Img, SimpleGrid } from '@chakra-ui/react'
 
 import { fetchGamePassGames } from '../clients/gamePassClient'
+import { getPosterImageUrl, getTitle } from '../meta/gamePassGame'
 
 export default function Home({ gamePassGames }) {
-  const data = pipe(map(pick(['LocalizedProperties'])))(gamePassGames)
-
   return (
-    <>
-      <Heading>Game Pass Critic</Heading>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </>
+    <Container maxW="960px">
+      <Heading my={10}>Game Pass Critic</Heading>
+      <SimpleGrid columns={3} spacing={5}>
+        {gamePassGames.map((game, index) => {
+          return (
+            <Box key={index} height="100%">
+              <Img
+                alt={getTitle(game)}
+                borderRadius="5px"
+                src={getPosterImageUrl(game)}
+              />
+            </Box>
+          )
+        })}
+      </SimpleGrid>
+    </Container>
   )
 }
 
