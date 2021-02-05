@@ -12,11 +12,12 @@ import {
 } from 'ramda'
 
 import { fetchGamePassGames } from '../clients/gamePassClient'
+import { getGameTimeToBeat } from '../clients/howLongToBeatClient'
 import { getGameScore } from '../clients/metacriticClient'
 import { GAME_IDS } from '../constants/gamesIds'
 import { getGameId, getPosterImageUrl, getTitle } from '../meta/gamePassGame'
 
-export default function Home({ gamePassGames, gameScore }) {
+export default function Home({ gamePassGames, gameScore, gameTimeToBeat }) {
   const gamePassGamesWithGamePassId = gamePassGames.map((gp) => ({
     ...gp,
     gamePassId: gp['ProductId'],
@@ -28,7 +29,7 @@ export default function Home({ gamePassGames, gameScore }) {
     values
   )
 
-  const games = fn([gameScore, gamePassGamesWithGamePassId])
+  const games = fn([gameScore, gamePassGamesWithGamePassId, gameTimeToBeat])
 
   return (
     <Container maxW="960px">
@@ -39,6 +40,7 @@ export default function Home({ gamePassGames, gameScore }) {
             <Box fontSize="xs" key={getGameId(game)} height="100%">
               <Box>{getTitle(game)}</Box>
               <Box>{game.score}</Box>
+              <Box>{game.timeToBeat}</Box>
               <Img
                 alt={getTitle(game)}
                 borderRadius="5px"
@@ -59,10 +61,16 @@ export const getStaticProps = async () => {
     getGameScore
   )(GAME_IDS)
 
+  const gameTimeToBeat = await pipe(
+    filter((id) => !!id.howLongToBeat),
+    getGameTimeToBeat
+  )(GAME_IDS)
+
   return {
     props: {
       gamePassGames,
       gameScore,
+      gameTimeToBeat,
     },
   }
 }
