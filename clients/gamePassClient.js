@@ -5,6 +5,11 @@ import {
   getGamesListUrl,
 } from '../constants/gamePassContants'
 
+const addGamePassIdPropIntoGame = (game) => ({
+  ...game,
+  gamePassId: game['ProductId'],
+})
+
 export async function fetchGamePassGames() {
   const gamePassGamesIds = await fetch(getGamesListUrl())
     .then((res) => res.json())
@@ -13,4 +18,5 @@ export async function fetchGamePassGames() {
   return await fetch(getGamesContentUrl(gamePassGamesIds))
     .then((res) => res.json())
     .then((data) => data['Products'])
+    .then(map(addGamePassIdPropIntoGame))
 }

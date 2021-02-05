@@ -5,7 +5,6 @@ export async function getGameTimeToBeat(gameIds) {
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
-  // console.log(browser)
   for (let i = 0; i < gameIds.length; i++) {
     const URL = `https://howlongtobeat.com/game?id=${gameIds[i].howLongToBeat}`
     const page = await browser.newPage()
