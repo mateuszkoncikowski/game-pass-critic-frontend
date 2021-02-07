@@ -1,10 +1,11 @@
 import { Box, Text } from '@chakra-ui/react'
-import { always, cond, gte, lte, T } from 'ramda'
+import { always, cond, equals, lte, T } from 'ramda'
 
 const getScoreColor = cond([
   [lte(75), always('green')],
   [lte(50), always('orange')],
-  [gte(49), always('red')],
+  [lte(1), always('red')],
+  [equals(0), always('grey')],
   [T, always('grey')],
 ])
 

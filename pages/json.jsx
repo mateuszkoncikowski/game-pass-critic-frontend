@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 
-import { fetchGamePassGames } from '../clients/gamePassClient'
+import fetchGamePassGames from '../clients/gamePassClient'
 
 export default function Json({ gamePassGames }) {
   return (

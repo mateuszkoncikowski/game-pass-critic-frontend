@@ -8,23 +8,12 @@ import {
   SimpleGrid,
   Spacer,
 } from '@chakra-ui/react'
-import {
-  always,
-  filter,
-  identity,
-  ifElse,
-  isEmpty,
-  not,
-  pipe,
-  prop,
-} from 'ramda'
+import { always, filter, identity, ifElse, isEmpty } from 'ramda'
 import React, { useEffect, useState } from 'react'
 
-import { fetchGamePassGames } from '../clients/gamePassClient'
-import { getGameTimeToBeat } from '../clients/howLongToBeatClient'
-import { getGameScore } from '../clients/metacriticClient'
+import { getContentfulGames } from '../clients/contentfulClient'
+import fetchGamePassGames from '../clients/gamePassClient'
 import ScoreBox from '../components/scoreBox'
-import { GAME_IDS } from '../constants/gamesIds'
 import { getGameId, getPosterImageUrl, getTitle } from '../meta/gamePassGame'
 import { mergeListsWithKey } from '../utils/ramdaUtils'
 
@@ -54,6 +43,9 @@ export default function Home({ games }) {
     setFilteredGames(useFilter(games, searchValue, filterGame))
   }, [searchValue])
 
+  // console.log(games[0].metaCriticScore)
+  // console.log(games[0])
+
   return (
     <Container maxW="960px">
       <Flex>
@@ -73,8 +65,8 @@ export default function Home({ games }) {
         {filteredGames.map((game) => {
           return (
             <Box fontSize="xs" key={getGameId(game)} height="100%">
-              <ScoreBox score={game.score} />
-              <Box>How long to beat (avg): {game.timeToBeat}</Box>
+              <ScoreBox score={game.metaCriticScore} />
+              <Box>How long to beat (avg): {game.howLongToBeatInAverage}</Box>
               <Img
                 alt={getTitle(game)}
                 borderRadius="6px"
@@ -90,17 +82,9 @@ export default function Home({ games }) {
 
 export const getStaticProps = async () => {
   const gamePassGames = await fetchGamePassGames()
-  const gamesScore = await pipe(
-    filter(pipe(prop('metaCritic'), isEmpty, not)),
-    getGameScore
-  )(GAME_IDS)
+  const contentfulGames = await getContentfulGames()
 
-  const gamesTimeToBeat = await pipe(
-    filter(pipe(prop('howLongToBeat'), isEmpty, not)),
-    getGameTimeToBeat
-  )(GAME_IDS)
-
-  const games = mergeListsWithKey([gamePassGames, gamesScore, gamesTimeToBeat])
+  const games = mergeListsWithKey([gamePassGames, contentfulGames])
 
   return {
     props: {
