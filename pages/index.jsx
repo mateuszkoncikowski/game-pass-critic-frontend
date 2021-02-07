@@ -43,9 +43,6 @@ export default function Home({ games }) {
     setFilteredGames(useFilter(games, searchValue, filterGame))
   }, [searchValue])
 
-  // console.log(games[0].metaCriticScore)
-  // console.log(games[0])
-
   return (
     <Container maxW="960px">
       <Flex>
