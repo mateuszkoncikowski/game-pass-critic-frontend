@@ -1,6 +1,6 @@
 import { find, head, pipe, prop, propEq } from 'ramda'
 
-const getLocalizedProps = pipe(prop('LocalizedProperties'), head)
+export const getLocalizedProps = pipe(prop('LocalizedProperties'), head)
 
 export const getPosterImageUrl = pipe(
   getLocalizedProps,
@@ -9,6 +9,6 @@ export const getPosterImageUrl = pipe(
   prop('Uri')
 )
 
-export const getTitle = pipe(getLocalizedProps, prop('ShortTitle'))
+export const getTitle = pipe(getLocalizedProps, prop('ProductTitle'))
 
 export const getGameId = prop('ProductId')

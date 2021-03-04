@@ -1,53 +1,37 @@
-const fetch = require('node-fetch')
-const R = require('ramda')
+import fetch from 'node-fetch'
+import { concat, map, pipe, prop, tail, uniq } from 'ramda'
 
-const GAME_PASS = {
-  endpoints: {
-    catalog: 'https://catalog.gamepass.com/',
-    displayCatalog: 'https://displaycatalog.mp.microsoft.com',
-  },
-  allGamesId: 'fdd9e2a7-0fee-49f6-ad69-4354098401ff',
-  market: 'US',
-  language: 'en-us',
-  msCv: 'DGU1mcuYo0WMMp+F.1',
-}
-
-const getGamesListUrl = () => {
-  const {
-    endpoints: { catalog },
-    language,
-    market,
-    allGamesId,
-  } = GAME_PASS
-
-  return `${catalog}/sigls/v2?id=${allGamesId}&language=${language}&market=${market}`
-}
-
-const getGamesContentUrl = (gamePassGamesIds) => {
-  const {
-    endpoints: { displayCatalog },
-    market,
-    language,
-    msCv,
-  } = GAME_PASS
-
-  return `${displayCatalog}/v7.0/products?bigIds=${gamePassGamesIds}&market=${market}&languages=${language}&MS-CV=${msCv}`
-}
+import {
+  GAME_PASS,
+  getGamesContentUrl,
+  getGamesListUrl,
+} from '../constants/gamePassContants.js'
 
 const addGamePassIdPropIntoGame = (game) => ({
   ...game,
   gamePassId: game['ProductId'],
 })
 
-async function fetchGamePassGames() {
-  const gamePassGamesIds = await fetch(getGamesListUrl())
-    .then((res) => res.json())
-    .then((data) => R.pipe(R.tail, R.map(R.prop('id')), R.join(','))(data))
+const getGamesData = pipe(tail, map(prop('id')))
 
-  return await fetch(getGamesContentUrl(gamePassGamesIds))
+const fetchGamePassCategory = async (gamesCategoryId) =>
+  await fetch(getGamesListUrl(gamesCategoryId))
+    .then((res) => res.json())
+    .then((data) => getGamesData(data))
+
+export async function fetchGamePassGames(limit = null) {
+  const [gamePassPcGamesIds, gamePassConsoleGamesIds] = await Promise.all([
+    fetchGamePassCategory(GAME_PASS.categories.allPcGamesId),
+    fetchGamePassCategory(GAME_PASS.categories.allConsoleGamesId),
+  ])
+
+  const uniqGameList = uniq(concat(gamePassPcGamesIds, gamePassConsoleGamesIds))
+  const limitedUniqGameList = limit
+    ? uniqGameList.slice(0, limit)
+    : uniqGameList
+
+  return await fetch(getGamesContentUrl(limitedUniqGameList))
     .then((res) => res.json())
     .then((data) => data['Products'])
-    .then(R.map(addGamePassIdPropIntoGame))
+    .then(map(addGamePassIdPropIntoGame))
 }
-
-module.exports = fetchGamePassGames

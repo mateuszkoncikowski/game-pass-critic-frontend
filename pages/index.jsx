@@ -12,7 +12,7 @@ import { always, filter, identity, ifElse, isEmpty } from 'ramda'
 import React, { useEffect, useState } from 'react'
 
 import { getContentfulGames } from '../clients/contentfulClient'
-import fetchGamePassGames from '../clients/gamePassClient'
+import { fetchGamePassGames } from '../clients/gamePassClient'
 import ScoreBox from '../components/scoreBox'
 import { getGameId, getPosterImageUrl, getTitle } from '../meta/gamePassGame'
 import { mergeListsWithKey } from '../utils/ramdaUtils'
@@ -59,19 +59,16 @@ export default function Home({ games }) {
         />
       </Flex>
       <SimpleGrid columns={3} spacing={5}>
-        {filteredGames.map((game) => {
-          return (
-            <Box fontSize="xs" key={getGameId(game)} height="100%">
-              <ScoreBox score={game.metaCriticScore} />
-              <Box>How long to beat (avg): {game.howLongToBeatInAverage}</Box>
-              <Img
-                alt={getTitle(game)}
-                borderRadius="6px"
-                src={getPosterImageUrl(game)}
-              />
-            </Box>
-          )
-        })}
+        {filteredGames.map((game) => (
+          <Box fontSize="xs" key={getGameId(game)} height="100%">
+            <ScoreBox score={game.metaCriticScore} />
+            <Img
+              alt={getTitle(game)}
+              borderRadius="6px"
+              src={getPosterImageUrl(game)}
+            />
+          </Box>
+        ))}
       </SimpleGrid>
     </Container>
   )

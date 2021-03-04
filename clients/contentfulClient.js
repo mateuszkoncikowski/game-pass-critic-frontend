@@ -3,7 +3,6 @@ import { map, path } from 'ramda'
 
 import { contentfulSpace, contentfulToken } from '../config'
 import { simplifyContentfulGameEntry } from '../meta/contentfulGame'
-import { getTitle } from '../meta/gamePassGame'
 
 const contentfulClient = createClient({
   accessToken: contentfulToken,
@@ -13,23 +12,6 @@ const getEnvironment = () =>
   contentfulClient
     .getSpace(contentfulSpace)
     .then((space) => space.getEnvironment('master'))
-
-export const createContentfulGamePass = (game) =>
-  getEnvironment().then((environment) =>
-    environment.createEntryWithId('gamePassGame', game.gamePassId, {
-      fields: {
-        title: {
-          'en-US': getTitle(game),
-        },
-        metaCriticScore: {
-          'en-US': game.metaCriticScore,
-        },
-        howLongToBeatInAverage: {
-          'en-US': game.howLongToBeatInAverage,
-        },
-      },
-    })
-  )
 
 export const getContentfulGames = () =>
   getContentfulEntries('gamePassGame').then((games) =>
