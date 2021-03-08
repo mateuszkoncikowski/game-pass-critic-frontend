@@ -12,7 +12,7 @@
     "@chakra-ui/react": "^1.2.1",
     "@emotion/react": "^11.1.4",
     "@emotion/styled": "^11.0.0",
-    "contentful-management": "^7.7.0",
+    "contentful": "^8.1.8",
     "date-fns": "^2.11.1",
     "dotenv": "^8.2.0",
     "framer-motion": "^3.3.0",

@@ -1,17 +1,13 @@
-import { createClient } from 'contentful-management'
+import { createClient } from 'contentful'
 import { map, path } from 'ramda'
 
-import { contentfulSpace, contentfulToken } from '../config'
+import { config } from '../config'
 import { simplifyContentfulGameEntry } from '../meta/contentfulGame'
 
 const contentfulClient = createClient({
-  accessToken: contentfulToken,
+  accessToken: config.contentfulToken,
+  space: config.contentfulSpace,
 })
-
-const getEnvironment = () =>
-  contentfulClient
-    .getSpace(contentfulSpace)
-    .then((space) => space.getEnvironment('master'))
 
 export const getContentfulGames = () =>
   getContentfulEntries('gamePassGame').then((games) =>
@@ -19,21 +15,17 @@ export const getContentfulGames = () =>
   )
 
 export const getContentfulEntry = (entryId) =>
-  getEnvironment().then((environment) => environment.getEntry(entryId))
+  contentfulClient.getEntry(entryId)
 
 const getContentfulEntries = (contentType) =>
-  getEnvironment().then((environment) =>
-    environment.getEntries({ content_type: contentType, limit: 1000 })
-  )
+  contentfulClient.getEntries({ content_type: contentType, limit: 1000 })
 
 export const getEntry = (entryId) =>
-  getEnvironment()
-    .then((environment) =>
-      environment.getEntries({
-        content_type: 'gamePassGame',
-        'sys.id': entryId,
-      })
-    )
+  contentfulClient
+    .getEntries({
+      content_type: 'gamePassGame',
+      'sys.id': entryId,
+    })
     .then((result) => (result.total === 1 ? result.items[0] : {}))
 
 export const isEntryPublished = (entry) =>
