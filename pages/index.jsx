@@ -9,7 +9,7 @@ import {
   SimpleGrid,
   Spacer,
 } from '@chakra-ui/react'
-import { allPass, filter, includes, map, pipe, T } from 'ramda'
+import { allPass, filter, includes, isEmpty, map, pipe, T } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -63,7 +63,9 @@ export default function Home({ games }) {
     )
   }, [searchedGameTitle, selectedGameGenre])
 
-  const categories = getGamesCategories(filteredGames)
+  const categories = getGamesCategories(
+    isEmpty(searchedGameTitle) ? games : filteredGames
+  )
 
   return (
     <Container maxW="960px">
