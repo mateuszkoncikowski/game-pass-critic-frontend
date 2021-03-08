@@ -5,28 +5,34 @@ import {
   Heading,
   Img,
   Input,
+  Select,
   SimpleGrid,
   Spacer,
 } from '@chakra-ui/react'
-import { always, filter, identity, ifElse, isEmpty } from 'ramda'
+import { allPass, filter, includes, map, pipe, T } from 'ramda'
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 import { getContentfulGames } from '../clients/contentfulClient'
 import { fetchGamePassGames } from '../clients/gamePassClient'
 import ScoreBox from '../components/scoreBox'
-import { getGameId, getPosterImageUrl, getTitle } from '../meta/gamePassGame'
+import {
+  getCategories,
+  getGameId,
+  getGamesCategories,
+  getPosterImageUrl,
+  getTitle,
+  trimCategory,
+} from '../meta/gamePassGame'
 import { mergeListsWithKey } from '../utils/ramdaUtils'
 
-const useFilter = (items, filterValue, fn) => {
-  const filterFn = ifElse(
-    always(isEmpty(filterValue)),
-    identity,
-    filter((item) => fn(filterValue, item))
-  )
-  return filterFn(items)
+const useFilters = (items, filters) => {
+  const predicates = map((f) => (f.value === '' ? T : f.fn(f.value)))(filters)
+
+  return filter(allPass(predicates))(items)
 }
 
-export const filterGame = (filter, game) => {
+export const filterTitle = (filter) => (game) => {
   const title = getTitle(game)
 
   if (filter) {
@@ -35,41 +41,69 @@ export const filterGame = (filter, game) => {
   return false
 }
 
+export const filterCategory = (filter) => (game) => {
+  const categories = pipe(getCategories, map(trimCategory))(game)
+
+  return includes(filter, categories)
+}
+
 export default function Home({ games }) {
-  const [searchValue, setSearchValue] = useState('')
   const [filteredGames, setFilteredGames] = useState(games)
 
+  const { register, watch } = useForm({ mode: 'onBlur' })
+  const searchedGameTitle = watch('game-filter')
+  const selectedGameGenre = watch('game-genre')
+
   useEffect(() => {
-    setFilteredGames(useFilter(games, searchValue, filterGame))
-  }, [searchValue])
+    setFilteredGames(
+      useFilters(games, [
+        { value: searchedGameTitle, fn: filterTitle },
+        { value: selectedGameGenre, fn: filterCategory },
+      ])
+    )
+  }, [searchedGameTitle, selectedGameGenre])
+
+  const categories = getGamesCategories(filteredGames)
 
   return (
     <Container maxW="960px">
-      <Flex>
-        <Heading my={10}>Game Pass Critic</Heading>
-        <Spacer />
-        <Input
-          my={10}
-          w="100"
-          value={searchValue}
-          onChange={(e) => {
-            setSearchValue(e.target.value)
-          }}
-          placeholder="Search for game ..."
-        />
-      </Flex>
-      <SimpleGrid columns={3} spacing={5}>
-        {filteredGames.map((game) => (
-          <Box fontSize="xs" key={getGameId(game)} height="100%">
-            <ScoreBox score={game.metaCriticScore} />
-            <Img
-              alt={getTitle(game)}
-              borderRadius="6px"
-              src={getPosterImageUrl(game)}
+      <form>
+        <Flex>
+          <Heading my={10}>Game Pass Critic</Heading>
+          <Spacer />
+          <Flex my={10}>
+            <Input
+              name="game-filter"
+              mr={2}
+              ref={register}
+              placeholder="Search for game ..."
             />
-          </Box>
-        ))}
-      </SimpleGrid>
+            <Select
+              name="game-genre"
+              ref={register}
+              placeholder="Select game genre"
+            >
+              {categories.map((c) => (
+                <option value={c.value} key={c.value}>
+                  {c.name}
+                </option>
+              ))}
+            </Select>
+          </Flex>
+        </Flex>
+        <SimpleGrid columns={3} spacing={5}>
+          {filteredGames.map((game) => (
+            <Box fontSize="xs" key={getGameId(game)} height="100%">
+              <ScoreBox score={game.metaCriticScore} />
+              <Img
+                alt={getTitle(game)}
+                borderRadius="6px"
+                src={getPosterImageUrl(game)}
+              />
+            </Box>
+          ))}
+        </SimpleGrid>
+      </form>
     </Container>
   )
 }
