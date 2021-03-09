@@ -2,6 +2,7 @@ import {
   find,
   flatten,
   head,
+  includes,
   map,
   pathOr,
   pipe,
@@ -38,3 +39,18 @@ export const getGamesCategories = pipe(
     value: trimCategory(category),
   }))
 )
+
+export const filterTitle = (filter) => (game) => {
+  const title = getTitle(game)
+
+  if (filter) {
+    return title.toLowerCase().includes(filter.toLowerCase())
+  }
+  return false
+}
+
+export const filterCategory = (filter) => (game) => {
+  const categories = pipe(getCategories, map(trimCategory))(game)
+
+  return includes(filter, categories)
+}

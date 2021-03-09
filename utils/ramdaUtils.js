@@ -1,4 +1,6 @@
 import {
+  allPass,
+  filter,
   indexBy,
   map,
   mergeRight,
@@ -8,6 +10,7 @@ import {
   propEq,
   reduce,
   reject,
+  T,
   values,
 } from 'ramda'
 
@@ -17,3 +20,9 @@ export const mergeListsWithKey = pipe(
   values,
   reject(propEq('LastModifiedDate', undefined))
 )
+
+export const useFilters = (items, filters) => {
+  const predicates = map((f) => (f.value === '' ? T : f.fn(f.value)))(filters)
+
+  return filter(allPass(predicates))(items)
+}
