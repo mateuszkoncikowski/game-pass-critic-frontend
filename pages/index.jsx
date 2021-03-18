@@ -126,7 +126,7 @@ export default function Home({ games }) {
 }
 
 export const getStaticProps = async () => {
-  const gamePassGames = await fetchGamePassGames()
+  const gamePassGames = await fetchGamePassGames(10)
   const contentfulGames = await getContentfulGames()
 
   const games = mergeListsWithKey([gamePassGames, contentfulGames])
