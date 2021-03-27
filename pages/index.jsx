@@ -18,10 +18,14 @@ import { isEmpty } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { getContentfulGames } from '../clients/contentfulClient'
+import {
+  getContentfulCarouselGames,
+  getContentfulGames,
+} from '../clients/contentfulClient'
 import { fetchGamePassGames } from '../clients/gamePassClient'
 import ScoreBox, { scoreCond, userScoreCond } from '../components/scoreBox'
 import { config } from '../config'
+import { MAIN_CAROUSEL_ID } from '../constants/constants'
 import {
   filterCategory,
   filterTitle,
@@ -54,10 +58,12 @@ export default function Home({ games }) {
   )
 
   return (
-    <Container maxW="960px">
+    <Container maxW="100%" centerContent>
+      <Box my={12}>
+        <Logo height={30} />
+      </Box>
       <form>
         <Flex h={100} align="center">
-          <Logo height={30} />
           <Spacer />
           <Flex>
             <Input
@@ -129,13 +135,22 @@ export default function Home({ games }) {
 export const getStaticProps = async () => {
   const gameFetchLimit = config.env === 'dev' ? 15 : null
   const gamePassGames = await fetchGamePassGames(gameFetchLimit)
+
   const contentfulGames = await getContentfulGames()
+  const contentfulCarouselGames = await getContentfulCarouselGames(
+    MAIN_CAROUSEL_ID
+  )
 
   const games = mergeListsWithKey([gamePassGames, contentfulGames])
+  const carouselGames = mergeListsWithKey([
+    gamePassGames,
+    contentfulCarouselGames,
+  ])
 
   return {
     props: {
       games,
+      carouselGames,
     },
   }
 }
