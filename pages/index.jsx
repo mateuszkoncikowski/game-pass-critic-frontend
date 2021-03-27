@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form'
 import { getContentfulGames } from '../clients/contentfulClient'
 import { fetchGamePassGames } from '../clients/gamePassClient'
 import ScoreBox, { scoreCond, userScoreCond } from '../components/scoreBox'
+import { config } from '../config'
 import {
   filterCategory,
   filterTitle,
@@ -126,7 +127,8 @@ export default function Home({ games }) {
 }
 
 export const getStaticProps = async () => {
-  const gamePassGames = await fetchGamePassGames(10)
+  const gameFetchLimit = config.env === 'dev' ? 15 : null
+  const gamePassGames = await fetchGamePassGames(gameFetchLimit)
   const contentfulGames = await getContentfulGames()
 
   const games = mergeListsWithKey([gamePassGames, contentfulGames])
