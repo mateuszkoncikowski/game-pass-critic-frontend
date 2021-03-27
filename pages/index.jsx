@@ -18,7 +18,6 @@ import { isEmpty } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-import Logo from '../assets/logo.svg'
 import { getContentfulGames } from '../clients/contentfulClient'
 import { fetchGamePassGames } from '../clients/gamePassClient'
 import ScoreBox, { scoreCond, userScoreCond } from '../components/scoreBox'
@@ -30,6 +29,7 @@ import {
   getPosterImageUrl,
   getTitle,
 } from '../meta/gamePassGame'
+import Logo from '../public/logo.svg'
 import { mergeListsWithKey, useFilters } from '../utils/ramdaUtils'
 
 export default function Home({ games }) {
