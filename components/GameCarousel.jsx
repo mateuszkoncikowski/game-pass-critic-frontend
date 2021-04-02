@@ -3,9 +3,9 @@ import { Carousel } from 'react-responsive-carousel'
 
 import { getGameId, getHeroArtImageUrl, getTitle } from '../meta/gamePassGame'
 
-const GameCarousel = ({ carouselGames }) => (
+const GameCarousel = ({ games }) => (
   <Carousel showThumbs={false} showIndicators={false} showStatus={false}>
-    {carouselGames.map((carouselGame) => (
+    {games.map((carouselGame) => (
       <Box key={getGameId(carouselGame)} position="relative" color="white">
         <Img
           style={{ objectFit: 'cover' }}

@@ -1,5 +1,5 @@
 import { createClient } from 'contentful'
-import { andThen, map, otherwise, path, pipe } from 'ramda'
+import { andThen, applySpec, map, otherwise, path, pipe } from 'ramda'
 
 import { config } from '../config'
 import { simplifyContentfulGameEntry } from '../meta/contentfulGame'
@@ -20,6 +20,21 @@ export const getContentfulCarouselGames = (carouselId) =>
     andThen(pipe(path(['fields', 'games']), map(simplifyContentfulGameEntry))),
     otherwise(() => [])
   )(carouselId)
+
+export const getContentfulGamesRow = (gamesRowId) =>
+  pipe(
+    getContentfulEntry,
+    andThen(
+      applySpec({
+        title: path(['fields', 'title']),
+        games: pipe(
+          path(['fields', 'games']),
+          map(simplifyContentfulGameEntry)
+        ),
+      })
+    ),
+    otherwise(() => ({ title: null, games: [] }))
+  )(gamesRowId)
 
 export const getContentfulEntry = (entryId) =>
   contentfulClient.getEntry(entryId)

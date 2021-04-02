@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63" height="63" viewBox="0 0 63 63">
+    <defs>
+        <filter id="Path_246" width="63" height="63" x="5.143" y="5.143">
+            <feOffset dy="3"/>
+            <feGaussianBlur result="blur" stdDeviation="3"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite in2="blur" operator="in"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+        <filter id="Path_247" width="63" height="63" x="0" y="0" >
+            <feOffset dy="3"/>
+            <feGaussianBlur result="blur-2" stdDeviation="3"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite in2="blur-2" operator="in"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g id="Group_16">
+        <g filter="url(#Path_246)" transform="translate(-521 -4195) translate(521 4195)">
+            <path fill="white" id="Path_246-2" d="M43.757 26.4a17.357 17.357 0 1 0 17.357 17.357A17.384 17.384 0 0 0 43.757 26.4zm9.117 23.649a1.818 1.818 0 0 1-1.519.8 1.771 1.771 0 0 1-1.052-.331l-5.766-3.974a2.6 2.6 0 0 1-.779.117 2.91 2.91 0 0 1-2.9-2.9 2.86 2.86 0 0 1 1.052-2.221v-7.017a1.851 1.851 0 1 1 3.7 0v7.013a2.884 2.884 0 0 1 1.03 1.964l5.766 3.974a1.865 1.865 0 0 1 .468 2.575z" transform="translate(-12.26 -15.26)"/>
+        </g>
+        <g filter="url(#Path_247)" transform="translate(-521 -4195) translate(521 4195)">
+            <path fill="white" id="Path_247-2" d="M22.5 0A22.5 22.5 0 1 0 45 22.5 22.522 22.522 0 0 0 22.5 0zm0 42.078A19.578 19.578 0 1 1 42.078 22.5 19.6 19.6 0 0 1 22.5 42.078z" transform="translate(9 6)"/>
+        </g>
+    </g>
+</svg>
