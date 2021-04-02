@@ -11,6 +11,7 @@ import {
 import { isEmpty } from 'ramda'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import ReactPaginate from 'react-paginate'
 
 import {
   filterCategory,
@@ -46,6 +47,26 @@ const GallerySection = ({ games }) => {
     isEmpty(searchedGameTitle) ? games : filteredGames
   )
 
+  const [offset, setOffset] = useState(0)
+  const [data, setData] = useState([])
+  const [perPage] = useState(8)
+  const [pageCount, setPageCount] = useState(0)
+
+  const handlePageClick = (e) => {
+    const selectedPage = e.selected
+    setOffset(selectedPage + 1)
+  }
+
+  const calculateGamesForPagination = () => {
+    const slice = filteredGames.slice(offset, offset + perPage)
+    setData(slice)
+    setPageCount(Math.ceil(filteredGames.length / perPage))
+  }
+
+  useEffect(() => {
+    calculateGamesForPagination()
+  }, [offset, filteredGames])
+
   return (
     <Box
       maxW="100%"
@@ -79,7 +100,7 @@ const GallerySection = ({ games }) => {
           </Flex>
         </Flex>
         <SimpleGrid columns={4} spacingX="50px" spacingY="25px">
-          {filteredGames.map((game) => (
+          {data.map((game) => (
             <Box fontSize="xs" key={getGameId(game)} height="100%">
               <Img
                 alt={getTitle(game)}
@@ -122,6 +143,21 @@ const GallerySection = ({ games }) => {
           ))}
         </SimpleGrid>
       </form>
+      <Flex justifyContent="center" mt={10}>
+        <ReactPaginate
+          previousLabel={'prev'}
+          nextLabel={'next'}
+          breakLabel={'...'}
+          breakClassName={'break-me'}
+          pageCount={pageCount}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination'}
+          subContainerClassName={'pages pagination'}
+          activeClassName={'active'}
+        />
+      </Flex>
     </Box>
   )
 }

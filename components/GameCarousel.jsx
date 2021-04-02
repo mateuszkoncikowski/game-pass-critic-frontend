@@ -37,9 +37,7 @@ const GameCarousel = ({ games }) => (
         </Flex>
         <Flex position="absolute" left="5%" bottom="5%">
           <Box>
-            <Heading size="xl">
-              <Heading size="xl">{getTitle(carouselGame)}</Heading>
-            </Heading>
+            <Heading size="xl">{getTitle(carouselGame)}</Heading>
           </Box>
         </Flex>
       </Box>

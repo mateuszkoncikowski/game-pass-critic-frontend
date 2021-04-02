@@ -1,3 +1,5 @@
+import '../public/pagination.css'
+
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { Helmet } from 'react-helmet'
 

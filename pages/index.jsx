@@ -32,7 +32,7 @@ export default function Home({ games, carouselGames, footerGamesRow }) {
 }
 
 export const getStaticProps = async () => {
-  const gameFetchLimit = config.env === 'dev' ? 15 : null
+  const gameFetchLimit = config.env === 'dev' ? 3 * 16 : null
   const gamePassGames = await fetchGamePassGames(gameFetchLimit)
 
   const contentfulGames = await getContentfulGames()
