@@ -19,7 +19,7 @@ const fetchGamePassCategory = async (gamesCategoryId) =>
     .then((res) => res.json())
     .then((data) => getGamesData(data))
 
-export async function fetchGamePassGames(limit = null) {
+export async function getGamePassGames(limit = null) {
   const [gamePassPcGamesIds, gamePassConsoleGamesIds] = await Promise.all([
     fetchGamePassCategory(GAME_PASS.categories.allPcGamesId),
     fetchGamePassCategory(GAME_PASS.categories.allConsoleGamesId),

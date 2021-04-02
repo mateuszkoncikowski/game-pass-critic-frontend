@@ -4,11 +4,22 @@ import {
   Heading,
   Img,
   Input,
+  Link,
   Select,
   SimpleGrid,
-  Spacer,
 } from '@chakra-ui/react'
-import { isEmpty } from 'ramda'
+import {
+  always,
+  ascend,
+  cond,
+  descend,
+  equals,
+  ifElse,
+  isEmpty,
+  prop,
+  sort,
+  T,
+} from 'ramda'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import ReactPaginate from 'react-paginate'
@@ -25,14 +36,19 @@ import ClockIcon from '../public/clock.svg'
 import CriticScoreIcon from '../public/criticScore.svg'
 import UserScoreIcon from '../public/userScore.svg'
 import { useFilters } from '../utils/ramdaUtils'
+import ArrowIcon from './ArrowIcon'
 import GalleryDataRow from './GalleryDataRow'
 
 const GallerySection = ({ games }) => {
   const [filteredGames, setFilteredGames] = useState(games)
 
-  const { register, watch } = useForm({ mode: 'onBlur' })
-  const searchedGameTitle = watch('game-filter')
-  const selectedGameGenre = watch('game-genre')
+  const { register, watch, setValue } = useForm({
+    mode: 'onBlur',
+    defaultValues: { gameSort: null },
+  })
+  const searchedGameTitle = watch('gameFilter')
+  const selectedGameGenre = watch('gameGenre')
+  const categoryToSort = watch('gameSort')
 
   useEffect(() => {
     setFilteredGames(
@@ -43,13 +59,37 @@ const GallerySection = ({ games }) => {
     )
   }, [searchedGameTitle, selectedGameGenre])
 
+  const [sortDirection, setSortDirection] = useState('descend')
+
+  useEffect(() => {
+    setValue('gameSort', 'criticScore')
+  }, [])
+
+  useEffect(() => {
+    const sortProp = cond([
+      [equals('criticScore'), always('metaCriticScore')],
+      [equals('userScore'), always('metaCriticUserScore')],
+      [equals('timeToBeat'), always('howLongToBeatMainStory')],
+      [T, always('metaCriticScore')],
+    ])(categoryToSort)
+
+    const sortDescend = sort(descend(prop(sortProp)))
+    const sortAscend = sort(ascend(prop(sortProp)))
+
+    ifElse(
+      equals('descend'),
+      () => setFilteredGames(sortDescend(filteredGames)),
+      () => setFilteredGames(sortAscend(filteredGames))
+    )(sortDirection)
+  }, [categoryToSort, sortDirection])
+
   const categories = getGamesCategories(
     isEmpty(searchedGameTitle) ? games : filteredGames
   )
 
   const [offset, setOffset] = useState(0)
   const [data, setData] = useState([])
-  const [perPage] = useState(8)
+  const [perPage] = useState(12)
   const [pageCount, setPageCount] = useState(0)
 
   const handlePageClick = (e) => {
@@ -77,19 +117,39 @@ const GallerySection = ({ games }) => {
       borderColor="gray.100"
     >
       <form>
-        <Flex h={100} align="center">
-          <Spacer />
+        <Flex justifyContent="space-between" mb={10} alignItems="center">
+          <Flex alignItems="center">
+            <Select name="gameSort" ref={register} w="300px" mr={5}>
+              <option value="criticScore">Critic Score</option>
+              <option value="userScore">User Score</option>
+              {/*<option value="timeToBeat">Time to Beat</option>*/}
+            </Select>
+            <Link mr={2} onClick={() => setSortDirection('descend')}>
+              <ArrowIcon
+                color={sortDirection === 'descend' ? `green` : 'gray'}
+                direction="up"
+              />
+            </Link>
+            <Link onClick={() => setSortDirection('ascend')}>
+              <ArrowIcon
+                color={sortDirection === 'ascend' ? `green` : 'gray'}
+                direction="down"
+              />
+            </Link>
+          </Flex>
           <Flex>
             <Input
-              name="game-filter"
+              name="gameFilter"
               mr={2}
               ref={register}
               placeholder="Search for game"
+              w="300px"
             />
             <Select
-              name="game-genre"
+              name="gameGenre"
               ref={register}
               placeholder="Select game genre"
+              w="300px"
             >
               {categories.map((c) => (
                 <option value={c.value} key={c.value}>

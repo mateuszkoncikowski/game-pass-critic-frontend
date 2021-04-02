@@ -9,7 +9,7 @@ import {
   getContentfulGames,
   getContentfulGamesRow,
 } from '../clients/contentfulClient'
-import { fetchGamePassGames } from '../clients/gamePassClient'
+import { getGamePassGames } from '../clients/gamePassClient'
 import FooterSection from '../components/FooterSection'
 import GallerySection from '../components/GallerySection'
 import GameCarousel from '../components/GameCarousel'
@@ -32,8 +32,8 @@ export default function Home({ games, carouselGames, footerGamesRow }) {
 }
 
 export const getStaticProps = async () => {
-  const gameFetchLimit = config.env === 'dev' ? 3 * 16 : null
-  const gamePassGames = await fetchGamePassGames(gameFetchLimit)
+  const gameFetchLimit = config.env === 'dev' ? 5 * 12 : null
+  const gamePassGames = await getGamePassGames(gameFetchLimit)
 
   const contentfulGames = await getContentfulGames()
   const contentfulCarouselGames = await getContentfulCarouselGames(
