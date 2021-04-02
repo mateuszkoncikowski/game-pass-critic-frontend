@@ -1,6 +1,6 @@
-import { path, zip } from 'ramda'
+import { path, pathOr, zip } from 'ramda'
 
-const getFieldValue = (field) => path(['fields', field])
+const getFieldValue = (field) => pathOr('N/A', ['fields', field])
 
 export const simplifyContentfulGameEntry = (contentfulGame) => ({
   gamePassId: path(['sys', 'id'], contentfulGame),

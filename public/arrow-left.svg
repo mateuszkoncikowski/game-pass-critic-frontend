@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="52.875" height="52.875" viewBox="0 0 52.875 52.875">
+    <defs>
+        <filter id="wqovgvjtka" width="52.875" height="52.875" x="0" y="0">
+            <feOffset dy="3"/>
+            <feGaussianBlur result="blur" stdDeviation="3"/>
+            <feFlood flood-opacity=".161"/>
+            <feComposite in2="blur" operator="in"/>
+            <feComposite in="SourceGraphic"/>
+        </filter>
+    </defs>
+    <g filter="url(#wqovgvjtka)">
+        <path fill="#fff" d="M18 35.438A17.438 17.438 0 1 1 35.438 18 17.434 17.434 0 0 1 18 35.438zm8.156-20.531H18V9.921a.844.844 0 0 0-1.441-.6L8.522 17.4a.836.836 0 0 0 0 1.188l8.037 8.079a.844.844 0 0 0 1.441-.6v-4.973h8.156A.846.846 0 0 0 27 20.25v-4.5a.846.846 0 0 0-.844-.844z" transform="translate(8.44 5.44)"/>
+    </g>
+</svg>
