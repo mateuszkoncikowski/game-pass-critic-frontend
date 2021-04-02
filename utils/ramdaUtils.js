@@ -18,7 +18,8 @@ export const mergeListsWithKey = pipe(
   map(indexBy(prop('gamePassId'))),
   reduce(mergeWith(mergeRight), {}),
   values,
-  reject(propEq('LastModifiedDate', undefined))
+  reject(propEq('LastModifiedDate', undefined)),
+  reject(propEq('contentfulTitle', undefined))
 )
 
 export const useFilters = (items, filters) => {

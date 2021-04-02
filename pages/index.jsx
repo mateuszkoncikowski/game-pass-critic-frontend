@@ -1,7 +1,10 @@
+import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
+
 import {
   Box,
   Container,
   Flex,
+  Heading,
   Img,
   Input,
   Select,
@@ -17,6 +20,7 @@ import {
 import { isEmpty } from 'ramda'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { Carousel } from 'react-responsive-carousel'
 
 import {
   getContentfulCarouselGames,
@@ -31,13 +35,14 @@ import {
   filterTitle,
   getGameId,
   getGamesCategories,
+  getHeroArtImageUrl,
   getPosterImageUrl,
   getTitle,
 } from '../meta/gamePassGame'
 import Logo from '../public/logo.svg'
 import { mergeListsWithKey, useFilters } from '../utils/ramdaUtils'
 
-export default function Home({ games }) {
+export default function Home({ games, carouselGames }) {
   const [filteredGames, setFilteredGames] = useState(games)
 
   const { register, watch } = useForm({ mode: 'onBlur' })
@@ -58,10 +63,53 @@ export default function Home({ games }) {
   )
 
   return (
-    <Container maxW="100%" centerContent>
-      <Box my={12}>
+    <Container maxW="container.xl">
+      <Container my={7} centerContent>
         <Logo height={30} />
-      </Box>
+      </Container>
+      <Carousel showThumbs={false} showIndicators={false} showStatus={false}>
+        {carouselGames.map((carouselGame) => (
+          <Box key={getGameId(carouselGame)} position="relative" color="white">
+            <Img
+              style={{ objectFit: 'cover' }}
+              height="400px"
+              alt={getTitle(carouselGame)}
+              src={`https:${getHeroArtImageUrl(carouselGame)}`}
+            />
+            <Flex
+              position="absolute"
+              direction="column"
+              top="0%"
+              right="5%"
+              height="100%"
+              textAlign="right"
+              justifyContent="space-around"
+            >
+              <Box>
+                <Heading size="3xl">{carouselGame.metaCriticScore}</Heading>
+                <Heading size="xl">Critic Score</Heading>
+              </Box>
+              <Box>
+                <Heading size="3xl">{carouselGame.metaCriticUserScore}</Heading>
+                <Heading size="xl">User Score</Heading>
+              </Box>
+              <Box>
+                <Heading size="3xl">
+                  {carouselGame.howLongToBeatHours[0]}
+                </Heading>
+                <Heading size="xl">Time to beat</Heading>
+              </Box>
+            </Flex>
+            <Flex position="absolute" left="5%" bottom="5%">
+              <Box>
+                <Heading size="xl">
+                  <Heading size="xl">{getTitle(carouselGame)}</Heading>
+                </Heading>
+              </Box>
+            </Flex>
+          </Box>
+        ))}
+      </Carousel>
       <form>
         <Flex h={100} align="center">
           <Spacer />

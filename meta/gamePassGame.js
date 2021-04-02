@@ -15,12 +15,12 @@ import {
 
 export const getLocalizedProps = pipe(prop('LocalizedProperties'), head)
 
-export const getPosterImageUrl = pipe(
-  getLocalizedProps,
-  prop('Images'),
-  find(propEq('ImagePurpose', 'Poster')),
-  prop('Uri')
-)
+const getImage = (purpose) =>
+  pipe(getLocalizedProps, prop('Images'), find(propEq('ImagePurpose', purpose)))
+
+export const getPosterImageUrl = pipe(getImage('Poster'), prop('Uri'))
+
+export const getHeroArtImageUrl = pipe(getImage('SuperHeroArt'), prop('Uri'))
 
 export const getTitle = pipe(getLocalizedProps, prop('ProductTitle'))
 
