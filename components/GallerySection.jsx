@@ -2,13 +2,13 @@ import {
   Box,
   Flex,
   Heading,
-  Img,
   Input,
   Link,
   Select,
   SimpleGrid,
   useBreakpointValue,
 } from '@chakra-ui/react'
+import Image from 'next/image'
 import {
   always,
   ascend,
@@ -205,10 +205,13 @@ const GallerySection = ({ games }) => {
 
             return (
               <Box fontSize="xs" key={getGameId(game)} height="100%">
-                <Img
+                <Image
                   alt={getTitle(game)}
-                  borderRadius="10px"
-                  src={getPosterImageUrl(game)}
+                  src={`https:${getPosterImageUrl(game)}`}
+                  layout="responsive"
+                  width={242}
+                  height={363}
+                  className="rounded"
                 />
                 <Flex pt="2" flexDirection="column">
                   <Heading

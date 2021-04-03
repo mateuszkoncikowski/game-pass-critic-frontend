@@ -1,4 +1,5 @@
 import '../public/pagination.css'
+import '../public/styles.css'
 
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 
