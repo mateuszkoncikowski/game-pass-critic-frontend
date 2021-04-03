@@ -1,4 +1,5 @@
-import { Box, Flex, Heading, Img } from '@chakra-ui/react'
+import { Box, Flex, Heading } from '@chakra-ui/react'
+import Image from 'next/image'
 import { Carousel } from 'react-responsive-carousel'
 
 import { getGameId, getHeroArtImageUrl, getTitle } from '../meta/gamePassGame'
@@ -8,11 +9,12 @@ const GameCarousel = ({ games }) => (
     <Carousel showThumbs={false} showIndicators={false} showStatus={false}>
       {games.map((carouselGame) => (
         <Box key={getGameId(carouselGame)} position="relative" color="white">
-          <Img
-            style={{ objectFit: 'cover' }}
+          <Image
             height="400px"
+            width="1200px"
             alt={getTitle(carouselGame)}
             src={`https:${getHeroArtImageUrl(carouselGame)}`}
+            className="carouselImage"
           />
           <Flex
             position="absolute"

@@ -1,3 +1,7 @@
 .rounded {
   border-radius: 6px;
 }
+
+.carouselImage {
+  object-fit: cover;
+}
