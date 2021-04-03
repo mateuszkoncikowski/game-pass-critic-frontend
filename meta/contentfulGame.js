@@ -39,7 +39,8 @@ export const simplifyContentfulGameEntry = (contentfulGame) => ({
   howLongToBeatGameId: getFieldValue('howLongToBeatGameId')(contentfulGame),
   howLongToBeatMainStory: pipe(
     convertTimeToNumber,
-    ifElse(isEmpty, always(0), identity)
+    ifElse(isEmpty, always(0), identity),
+    parseInt
   )(contentfulGame),
   howLongToBeatCategories: getFieldValue('howLongToBeatCategories')(
     contentfulGame

@@ -43,7 +43,7 @@ const GallerySection = ({ games }) => {
   const [filteredAndSortedGames, setFilteredAndSortedGames] = useState(games)
   const [sortDirection, setSortDirection] = useState('descend')
 
-  const { register, watch, setValue } = useForm({
+  const { register, watch, setValue, getValues } = useForm({
     mode: 'onBlur',
     defaultValues: { gameSort: null },
   })
@@ -117,9 +117,9 @@ const GallerySection = ({ games }) => {
         <Flex justifyContent="space-between" mb={10} alignItems="center">
           <Flex alignItems="center">
             <Select name="gameSort" ref={register} w="300px" mr={5}>
-              <option value="criticScore">Critic Score</option>
-              <option value="userScore">User Score</option>
-              {/*<option value="timeToBeat">Time to Beat</option>*/}
+              <option value="criticScore">Sort by: Critic Score</option>
+              <option value="userScore">Sort by: User Score</option>
+              <option value="timeToBeat">Sort by: Time to Beat</option>
             </Select>
             <Link mr={2} onClick={() => setSortDirection('descend')}>
               <ArrowIcon
@@ -189,11 +189,13 @@ const GallerySection = ({ games }) => {
                       icon={<CriticScoreIcon />}
                       value={criticScore}
                       category="CriticScore"
+                      highlighted={getValues('gameSort') === 'criticScore'}
                     />
                     <GalleryDataRow
                       icon={<UserScoreIcon />}
                       value={userScore}
                       category="User Score"
+                      highlighted={getValues('gameSort') === 'userScore'}
                     />
                     {game.howLongToBeat &&
                       game.howLongToBeat.map((time, i) => (
@@ -202,6 +204,9 @@ const GallerySection = ({ games }) => {
                           icon={<ClockIcon />}
                           value={time[1]}
                           category={time[0]}
+                          highlighted={
+                            i === 0 && getValues('gameSort') === 'timeToBeat'
+                          }
                         />
                       ))}
                   </Box>
