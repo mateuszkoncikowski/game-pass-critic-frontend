@@ -40,7 +40,8 @@ import ArrowIcon from './ArrowIcon'
 import GalleryDataRow from './GalleryDataRow'
 
 const GallerySection = ({ games }) => {
-  const [filteredGames, setFilteredGames] = useState(games)
+  const [filteredAndSortedGames, setFilteredAndSortedGames] = useState(games)
+  const [sortDirection, setSortDirection] = useState('descend')
 
   const { register, watch, setValue } = useForm({
     mode: 'onBlur',
@@ -51,21 +52,15 @@ const GallerySection = ({ games }) => {
   const categoryToSort = watch('gameSort')
 
   useEffect(() => {
-    setFilteredGames(
-      useFilters(games, [
-        { value: searchedGameTitle, fn: filterTitle },
-        { value: selectedGameGenre, fn: filterCategory },
-      ])
-    )
-  }, [searchedGameTitle, selectedGameGenre])
-
-  const [sortDirection, setSortDirection] = useState('descend')
-
-  useEffect(() => {
     setValue('gameSort', 'criticScore')
   }, [])
 
   useEffect(() => {
+    const filteredGames = useFilters(games, [
+      { value: searchedGameTitle, fn: filterTitle },
+      { value: selectedGameGenre, fn: filterCategory },
+    ])
+
     const sortProp = cond([
       [equals('criticScore'), always('metaCriticScore')],
       [equals('userScore'), always('metaCriticUserScore')],
@@ -76,36 +71,38 @@ const GallerySection = ({ games }) => {
     const sortDescend = sort(descend(prop(sortProp)))
     const sortAscend = sort(ascend(prop(sortProp)))
 
-    ifElse(
+    const sortedGames = ifElse(
       equals('descend'),
-      () => setFilteredGames(sortDescend(filteredGames)),
-      () => setFilteredGames(sortAscend(filteredGames))
+      () => sortDescend(filteredGames),
+      () => sortAscend(filteredGames)
     )(sortDirection)
-  }, [categoryToSort, sortDirection])
+
+    setFilteredAndSortedGames(sortedGames)
+  }, [searchedGameTitle, selectedGameGenre, categoryToSort, sortDirection])
 
   const categories = getGamesCategories(
-    isEmpty(searchedGameTitle) ? games : filteredGames
+    isEmpty(searchedGameTitle) ? games : filteredAndSortedGames
   )
 
   const [offset, setOffset] = useState(0)
-  const [data, setData] = useState([])
+  const [paginatedData, setPaginatedData] = useState([])
   const [perPage] = useState(12)
   const [pageCount, setPageCount] = useState(0)
 
   const handlePageClick = (e) => {
     const selectedPage = e.selected
-    setOffset(selectedPage + 1)
+    setOffset(selectedPage * perPage)
   }
 
   const calculateGamesForPagination = () => {
-    const slice = filteredGames.slice(offset, offset + perPage)
-    setData(slice)
-    setPageCount(Math.ceil(filteredGames.length / perPage))
+    const slice = filteredAndSortedGames.slice(offset, offset + perPage)
+    setPaginatedData(slice)
+    setPageCount(Math.ceil(filteredAndSortedGames.length / perPage))
   }
 
   useEffect(() => {
     calculateGamesForPagination()
-  }, [offset, filteredGames])
+  }, [offset, filteredAndSortedGames])
 
   return (
     <Box
@@ -160,47 +157,58 @@ const GallerySection = ({ games }) => {
           </Flex>
         </Flex>
         <SimpleGrid columns={4} spacingX="50px" spacingY="25px">
-          {data.map((game) => (
-            <Box fontSize="xs" key={getGameId(game)} height="100%">
-              <Img
-                alt={getTitle(game)}
-                borderRadius="10px"
-                src={getPosterImageUrl(game)}
-              />
-              <Flex pt="2" flexDirection="column">
-                <Heading
-                  as="h3"
-                  size="xs"
-                  py={2}
-                  fontWeight="normal"
-                  textAlign="center"
-                >
-                  {getTitle(game)}
-                </Heading>
-                <Box>
-                  <GalleryDataRow
-                    icon={<CriticScoreIcon />}
-                    value={`${game.metaCriticScore} / 100`}
-                    category="CriticScore"
-                  />
-                  <GalleryDataRow
-                    icon={<UserScoreIcon />}
-                    value={`${game.metaCriticUserScore} / 10`}
-                    category="User Score"
-                  />
-                  {game.howLongToBeat &&
-                    game.howLongToBeat.map((time, i) => (
-                      <GalleryDataRow
-                        key={i}
-                        icon={<ClockIcon />}
-                        value={time[1]}
-                        category={time[0]}
-                      />
-                    ))}
-                </Box>
-              </Flex>
-            </Box>
-          ))}
+          {paginatedData.map((game) => {
+            const criticScore =
+              game.metaCriticScore === 0
+                ? 'N/A'
+                : `${game.metaCriticScore} / 100`
+            const userScore =
+              game.metaCriticUserScore === 0
+                ? 'N/A'
+                : `${game.metaCriticUserScore} / 10`
+
+            return (
+              <Box fontSize="xs" key={getGameId(game)} height="100%">
+                <Img
+                  alt={getTitle(game)}
+                  borderRadius="10px"
+                  src={getPosterImageUrl(game)}
+                />
+                <Flex pt="2" flexDirection="column">
+                  <Heading
+                    as="h3"
+                    size="xs"
+                    py={2}
+                    fontWeight="normal"
+                    textAlign="center"
+                  >
+                    {getTitle(game)}
+                  </Heading>
+                  <Box>
+                    <GalleryDataRow
+                      icon={<CriticScoreIcon />}
+                      value={criticScore}
+                      category="CriticScore"
+                    />
+                    <GalleryDataRow
+                      icon={<UserScoreIcon />}
+                      value={userScore}
+                      category="User Score"
+                    />
+                    {game.howLongToBeat &&
+                      game.howLongToBeat.map((time, i) => (
+                        <GalleryDataRow
+                          key={i}
+                          icon={<ClockIcon />}
+                          value={time[1]}
+                          category={time[0]}
+                        />
+                      ))}
+                  </Box>
+                </Flex>
+              </Box>
+            )
+          })}
         </SimpleGrid>
       </form>
       <Flex justifyContent="center" mt={10}>

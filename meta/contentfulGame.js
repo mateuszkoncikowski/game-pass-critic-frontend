@@ -15,6 +15,7 @@ import {
 } from 'ramda'
 
 const getFieldValue = (field) => pathOr('N/A', ['fields', field])
+const getNumericFieldValue = (field) => pathOr(0, ['fields', field])
 
 const convertTimeToNumber = pipe(
   getFieldValue('howLongToBeatHours'),
@@ -30,8 +31,10 @@ const convertTimeToNumber = pipe(
 export const simplifyContentfulGameEntry = (contentfulGame) => ({
   gamePassId: path(['sys', 'id'], contentfulGame),
   contentfulTitle: getFieldValue('title')(contentfulGame),
-  metaCriticScore: getFieldValue('metaCriticScore')(contentfulGame),
-  metaCriticUserScore: getFieldValue('metaCriticUserScore')(contentfulGame),
+  metaCriticScore: getNumericFieldValue('metaCriticScore')(contentfulGame),
+  metaCriticUserScore: getNumericFieldValue('metaCriticUserScore')(
+    contentfulGame
+  ),
   metaCriticHref: getFieldValue('metaCriticHref')(contentfulGame),
   howLongToBeatGameId: getFieldValue('howLongToBeatGameId')(contentfulGame),
   howLongToBeatMainStory: pipe(
