@@ -3,7 +3,7 @@ import { Box, Container, Flex, Heading } from '@chakra-ui/react'
 import FooterGameCard from './FooterGameCard'
 
 const FooterSection = ({ footer: { title, games } }) => (
-  <Box backgroundColor="#107c10" pb={8}>
+  <Box backgroundColor="#107c10" pb={8} display={{ base: 'none', md: 'block' }}>
     <Container maxW="container.xl">
       <Heading
         color="white"

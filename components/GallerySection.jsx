@@ -108,15 +108,25 @@ const GallerySection = ({ games }) => {
     <Box
       maxW="100%"
       my={10}
-      p={10}
+      p={{ base: 5, md: 10 }}
       border="1px"
       borderRadius="10px"
       borderColor="gray.100"
     >
       <form>
-        <Flex justifyContent="space-between" mb={10} alignItems="center">
-          <Flex alignItems="center">
-            <Select name="gameSort" ref={register} w="300px" mr={5}>
+        <Flex
+          flexDirection={['column', 'column', 'row']}
+          justifyContent="space-between"
+          mb={10}
+          alignItems="center"
+        >
+          <Flex alignItems="center" w="100%" mb={{ base: '4', md: '0' }}>
+            <Select
+              name="gameSort"
+              ref={register}
+              w={{ base: '100%', md: '50%' }}
+              mr={5}
+            >
               <option value="criticScore">Sort by: Critic Score</option>
               <option value="userScore">Sort by: User Score</option>
               <option value="timeToBeat">Sort by: Time to Beat</option>
@@ -134,19 +144,24 @@ const GallerySection = ({ games }) => {
               />
             </Link>
           </Flex>
-          <Flex>
+          <Flex
+            flexDirection={{ base: 'column', md: 'row' }}
+            w="100%"
+            justifyContent="end"
+          >
             <Input
               name="gameFilter"
               mr={2}
+              mb={{ base: '4', md: '0' }}
               ref={register}
               placeholder="Search for game"
-              w="300px"
+              w={{ base: '100%', md: '40%' }}
             />
             <Select
               name="gameGenre"
               ref={register}
               placeholder="Select game genre"
-              w="300px"
+              w={{ base: '100%', md: '40%' }}
             >
               {categories.map((c) => (
                 <option value={c.value} key={c.value}>
@@ -156,7 +171,11 @@ const GallerySection = ({ games }) => {
             </Select>
           </Flex>
         </Flex>
-        <SimpleGrid columns={4} spacingX="50px" spacingY="25px">
+        <SimpleGrid
+          columns={[1, 2, 3, 4]}
+          spacingX={{ base: 25, lg: 50 }}
+          spacingY="25px"
+        >
           {paginatedData.map((game) => {
             const criticScore =
               game.metaCriticScore === 0

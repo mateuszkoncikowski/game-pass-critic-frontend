@@ -21,7 +21,7 @@ import { mergeListsWithKey } from '../utils/ramdaUtils'
 export default function Home({ games, carouselGames, footerGamesRow }) {
   return (
     <>
-      <Container maxW="container.xl">
+      <Container maxW="container.xl" p={{ base: 5, md: 10 }}>
         <LogoSection />
         <GameCarousel games={carouselGames} />
         <GallerySection games={games} />
