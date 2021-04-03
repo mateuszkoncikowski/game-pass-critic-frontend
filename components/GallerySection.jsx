@@ -7,6 +7,7 @@ import {
   Link,
   Select,
   SimpleGrid,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import {
   always,
@@ -17,6 +18,7 @@ import {
   ifElse,
   isEmpty,
   prop,
+  propOr,
   sort,
   T,
 } from 'ramda'
@@ -103,6 +105,21 @@ const GallerySection = ({ games }) => {
   useEffect(() => {
     calculateGamesForPagination()
   }, [offset, filteredAndSortedGames])
+
+  const paginationBreakpointData = useBreakpointValue({
+    base: {
+      nextLabel: '',
+      previousLabel: '',
+      marginPagesDisplayed: 1,
+      pageRangeDisplayed: 2,
+    },
+    md: {
+      nextLabel: 'next',
+      previousLabel: 'prev',
+      marginPagesDisplayed: 2,
+      pageRangeDisplayed: 5,
+    },
+  })
 
   return (
     <Box
@@ -237,13 +254,19 @@ const GallerySection = ({ games }) => {
       </form>
       <Flex justifyContent="center" mt={10}>
         <ReactPaginate
-          previousLabel={'prev'}
-          nextLabel={'next'}
+          previousLabel={propOr('', 'previousLabel')(paginationBreakpointData)}
+          nextLabel={propOr('', 'nextLabel')(paginationBreakpointData)}
           breakLabel={'...'}
           breakClassName={'break-me'}
           pageCount={pageCount}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
+          marginPagesDisplayed={propOr(
+            0,
+            'marginPagesDisplayed'
+          )(paginationBreakpointData)}
+          pageRangeDisplayed={propOr(
+            0,
+            'pageRangeDisplayed'
+          )(paginationBreakpointData)}
           onPageChange={handlePageClick}
           containerClassName={'pagination'}
           subContainerClassName={'pages pagination'}

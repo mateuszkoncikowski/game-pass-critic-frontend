@@ -10,6 +10,7 @@ export default class extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta name="keywords" content="xbox, gamepass" />
+          <title>Game Pass Critic</title>
           <link rel="stylesheet" href="https://use.typekit.net/fff7ftw.css" />
           <script
             async
