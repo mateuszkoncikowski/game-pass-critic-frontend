@@ -1,8 +1,10 @@
 import {
   always,
+  equals,
   head,
   identity,
   ifElse,
+  invoker,
   isEmpty,
   join,
   map,
@@ -28,13 +30,17 @@ const convertTimeToNumber = pipe(
   join('')
 )
 
+const toFixed = invoker(1, 'toFixed')
+
 export const simplifyContentfulGameEntry = (contentfulGame) => ({
   gamePassId: path(['sys', 'id'], contentfulGame),
   contentfulTitle: getFieldValue('title')(contentfulGame),
   metaCriticScore: getNumericFieldValue('metaCriticScore')(contentfulGame),
-  metaCriticUserScore: getNumericFieldValue('metaCriticUserScore')(
-    contentfulGame
-  ),
+  metaCriticUserScore: pipe(
+    getNumericFieldValue('metaCriticUserScore'),
+    parseFloat,
+    ifElse(equals(0), identity, toFixed(1))
+  )(contentfulGame),
   metaCriticHref: getFieldValue('metaCriticHref')(contentfulGame),
   howLongToBeatGameId: getFieldValue('howLongToBeatGameId')(contentfulGame),
   howLongToBeatMainStory: pipe(

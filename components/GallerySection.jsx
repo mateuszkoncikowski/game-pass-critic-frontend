@@ -227,7 +227,7 @@ const GallerySection = ({ games }) => {
                     <GalleryDataRow
                       icon={<CriticScoreIcon />}
                       value={criticScore}
-                      category="CriticScore"
+                      category="Critic Score"
                       highlighted={getValues('gameSort') === 'criticScore'}
                     />
                     <GalleryDataRow

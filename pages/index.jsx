@@ -10,9 +10,7 @@ import {
   getContentfulGamesRow,
 } from '../clients/contentfulClient'
 import { getGamePassGames } from '../clients/gamePassClient'
-import FooterSection from '../components/FooterSection'
 import GallerySection from '../components/GallerySection'
-import GameCarousel from '../components/GameCarousel'
 import LogoSection from '../components/LogoSection'
 import { config } from '../config'
 import { FOOTER_GAMES_ROW_ID, MAIN_CAROUSEL_ID } from '../constants/constants'
@@ -23,10 +21,10 @@ export default function Home({ games, carouselGames, footerGamesRow }) {
     <>
       <Container maxW="container.xl" p={{ base: 5, md: 10 }}>
         <LogoSection />
-        <GameCarousel games={carouselGames} />
+        {/*<GameCarousel games={carouselGames} />*/}
         <GallerySection games={games} />
       </Container>
-      <FooterSection footer={footerGamesRow} />
+      {/*<FooterSection footer={footerGamesRow} />*/}
     </>
   )
 }
