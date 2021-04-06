@@ -6,7 +6,14 @@ import { getGameId, getHeroArtImageUrl, getTitle } from '../meta/gamePassGame'
 
 const GameCarousel = ({ games }) => (
   <Box display={{ base: 'none', md: 'block' }}>
-    <Carousel showThumbs={false} showIndicators={false} showStatus={false}>
+    <Carousel
+      showThumbs={false}
+      showIndicators={false}
+      showStatus={false}
+      autoPlay
+      infiniteLoop
+      interval={5000}
+    >
       {games.map((carouselGame) => (
         <Box key={getGameId(carouselGame)} position="relative" color="white">
           <Image

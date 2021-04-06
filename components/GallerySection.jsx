@@ -17,6 +17,7 @@ import {
   equals,
   ifElse,
   isEmpty,
+  isNil,
   prop,
   propOr,
   sort,
@@ -31,6 +32,7 @@ import {
   filterTitle,
   getGameId,
   getGamesCategories,
+  getPlatformsInfo,
   getPosterImageUrl,
   getTitle,
 } from '../meta/gamePassGame'
@@ -203,6 +205,8 @@ const GallerySection = ({ games }) => {
                 ? 'N/A'
                 : `${game.metaCriticUserScore} / 10`
 
+            const platformsInfo = getPlatformsInfo(game)
+
             return (
               <Box fontSize="xs" key={getGameId(game)} height="100%">
                 <Image
@@ -224,6 +228,12 @@ const GallerySection = ({ games }) => {
                     {getTitle(game)}
                   </Heading>
                   <Box>
+                    <GalleryDataRow
+                      value={`${platformsInfo.isPcCompatible ? 'PC' : ''} ${
+                        platformsInfo.isConsoleCompatible ? 'Console' : ''
+                      }`}
+                      category="Platform"
+                    />
                     <GalleryDataRow
                       icon={<CriticScoreIcon />}
                       value={criticScore}

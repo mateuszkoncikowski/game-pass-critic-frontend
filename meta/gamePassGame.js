@@ -1,9 +1,13 @@
 import {
+  equals,
   find,
   flatten,
   head,
   includes,
+  isNil,
   map,
+  not,
+  path,
   pathOr,
   pipe,
   prop,
@@ -21,6 +25,27 @@ const getImage = (purpose) =>
 export const getPosterImageUrl = pipe(getImage('Poster'), prop('Uri'))
 
 export const getHeroArtImageUrl = pipe(getImage('SuperHeroArt'), prop('Uri'))
+
+export const getPlatformsInfo = (game) => ({
+  isConsoleCompatible:
+    getTitle(game) === 'Minecraft'
+      ? true
+      : pipe(
+          path(['Properties', 'XboxConsoleGenCompatible']),
+          isNil,
+          not
+        )(game),
+  isPcCompatible: pipe(
+    path(['DisplaySkuAvailabilities']),
+    head,
+    path(['Availabilities']),
+    head,
+    path(['Conditions', 'ClientConditions', 'AllowedPlatforms']),
+    head,
+    prop('PlatformName'),
+    equals('Windows.Desktop')
+  )(game),
+})
 
 export const getTitle = pipe(getLocalizedProps, prop('ProductTitle'))
 
