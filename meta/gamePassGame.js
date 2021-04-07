@@ -79,3 +79,6 @@ export const filterCategory = (filter) => (game) => {
 
   return includes(filter, categories)
 }
+
+export const filterReleaseDate = (filter) => (game) =>
+  game.monthsSinceRelease <= parseInt(filter)

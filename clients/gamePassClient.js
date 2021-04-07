@@ -1,5 +1,5 @@
-import fetch from 'node-fetch'
-import { concat, map, pipe, prop, tail, uniq } from 'ramda'
+import { differenceInMonths } from 'date-fns'
+import { concat, head, map, pipe, prop, tail, uniq } from 'ramda'
 
 import {
   GAME_PASS,
@@ -7,9 +7,19 @@ import {
   getGamesListUrl,
 } from '../constants/gamePassContants.js'
 
+const getReleaseDate = pipe(
+  prop('MarketProperties'),
+  head,
+  prop('OriginalReleaseDate')
+)
+
 const addGamePassIdPropIntoGame = (game) => ({
   ...game,
   gamePassId: game['ProductId'],
+  monthsSinceRelease: differenceInMonths(
+    new Date(),
+    new Date(getReleaseDate(game))
+  ),
 })
 
 const getGamesData = pipe(tail, map(prop('id')))

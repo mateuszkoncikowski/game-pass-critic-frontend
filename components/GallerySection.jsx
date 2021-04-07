@@ -17,7 +17,6 @@ import {
   equals,
   ifElse,
   isEmpty,
-  isNil,
   prop,
   propOr,
   sort,
@@ -29,6 +28,7 @@ import ReactPaginate from 'react-paginate'
 
 import {
   filterCategory,
+  filterReleaseDate,
   filterTitle,
   getGameId,
   getGamesCategories,
@@ -54,6 +54,7 @@ const GallerySection = ({ games }) => {
   const searchedGameTitle = watch('gameFilter')
   const selectedGameGenre = watch('gameGenre')
   const categoryToSort = watch('gameSort')
+  const monthsSinceRelease = watch('monthsSinceRelease')
 
   useEffect(() => {
     setValue('gameSort', 'criticScore')
@@ -63,6 +64,7 @@ const GallerySection = ({ games }) => {
     const filteredGames = useFilters(games, [
       { value: searchedGameTitle, fn: filterTitle },
       { value: selectedGameGenre, fn: filterCategory },
+      { value: monthsSinceRelease, fn: filterReleaseDate },
     ])
 
     const sortProp = cond([
@@ -82,7 +84,13 @@ const GallerySection = ({ games }) => {
     )(sortDirection)
 
     setFilteredAndSortedGames(sortedGames)
-  }, [searchedGameTitle, selectedGameGenre, categoryToSort, sortDirection])
+  }, [
+    searchedGameTitle,
+    selectedGameGenre,
+    categoryToSort,
+    sortDirection,
+    monthsSinceRelease,
+  ])
 
   const categories = getGamesCategories(
     isEmpty(searchedGameTitle) ? games : filteredAndSortedGames
@@ -178,6 +186,8 @@ const GallerySection = ({ games }) => {
             />
             <Select
               name="gameGenre"
+              mr={2}
+              mb={{ base: '4', md: '0' }}
               ref={register}
               placeholder="Select game genre"
               w={{ base: '100%', md: '40%' }}
@@ -187,6 +197,15 @@ const GallerySection = ({ games }) => {
                   {c.name}
                 </option>
               ))}
+            </Select>
+            <Select
+              name="monthsSinceRelease"
+              ref={register}
+              w={{ base: '100%', md: '50%' }}
+            >
+              <option value="12">released less than 12 months ago</option>
+              <option value="36">released less than 36 months ago</option>
+              <option value={30 * 12}>all</option>
             </Select>
           </Flex>
         </Flex>
