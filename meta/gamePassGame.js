@@ -7,6 +7,7 @@ import {
   isNil,
   map,
   not,
+  or,
   path,
   pathOr,
   pipe,
@@ -82,3 +83,13 @@ export const filterCategory = (filter) => (game) => {
 
 export const filterReleaseDate = (filter) => (game) =>
   game.monthsSinceRelease <= parseInt(filter)
+
+export const filterPlatformCheckbox = (filter) => (game) => {
+  const { isConsoleCompatible, isPcCompatible } = getPlatformsInfo(game)
+  const { consoleCheckbox, pcCheckbox } = filter
+
+  return or(
+    consoleCheckbox ? isConsoleCompatible : false,
+    pcCheckbox ? isPcCompatible : false
+  )
+}

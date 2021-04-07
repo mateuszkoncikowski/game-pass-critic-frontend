@@ -1,5 +1,6 @@
 import {
   Box,
+  Checkbox,
   Flex,
   Heading,
   Input,
@@ -28,6 +29,7 @@ import ReactPaginate from 'react-paginate'
 
 import {
   filterCategory,
+  filterPlatformCheckbox,
   filterReleaseDate,
   filterTitle,
   getGameId,
@@ -55,6 +57,8 @@ const GallerySection = ({ games }) => {
   const selectedGameGenre = watch('gameGenre')
   const categoryToSort = watch('gameSort')
   const monthsSinceRelease = watch('monthsSinceRelease')
+  const consoleCheckbox = watch('consoleCheckbox')
+  const pcCheckbox = watch('pcCheckbox')
 
   useEffect(() => {
     setValue('gameSort', 'criticScore')
@@ -65,6 +69,7 @@ const GallerySection = ({ games }) => {
       { value: searchedGameTitle, fn: filterTitle },
       { value: selectedGameGenre, fn: filterCategory },
       { value: monthsSinceRelease, fn: filterReleaseDate },
+      { value: { consoleCheckbox, pcCheckbox }, fn: filterPlatformCheckbox },
     ])
 
     const sortProp = cond([
@@ -85,11 +90,13 @@ const GallerySection = ({ games }) => {
 
     setFilteredAndSortedGames(sortedGames)
   }, [
+    categoryToSort,
+    consoleCheckbox,
+    monthsSinceRelease,
+    pcCheckbox,
     searchedGameTitle,
     selectedGameGenre,
-    categoryToSort,
     sortDirection,
-    monthsSinceRelease,
   ])
 
   const categories = getGamesCategories(
@@ -147,11 +154,15 @@ const GallerySection = ({ games }) => {
           mb={10}
           alignItems="center"
         >
-          <Flex alignItems="center" w="100%" mb={{ base: '4', md: '0' }}>
+          <Flex
+            alignItems="center"
+            w={{ base: '100%', md: '80%' }}
+            mb={{ base: '4', md: '0' }}
+          >
             <Select
               name="gameSort"
               ref={register}
-              w={{ base: '100%', md: '50%' }}
+              w={{ base: '100%', md: '40%' }}
               mr={5}
             >
               <option value="criticScore">Sort by: Critic Score</option>
@@ -176,6 +187,28 @@ const GallerySection = ({ games }) => {
             w="100%"
             justifyContent="end"
           >
+            <Flex my={{ base: 4, md: 0 }}>
+              <Checkbox
+                colorScheme="green"
+                defaultIsChecked
+                isDisabled={!consoleCheckbox}
+                mr={2}
+                name="pcCheckbox"
+                ref={register}
+              >
+                PC
+              </Checkbox>
+              <Checkbox
+                colorScheme="green"
+                defaultIsChecked
+                isDisabled={!pcCheckbox}
+                mr={4}
+                name="consoleCheckbox"
+                ref={register}
+              >
+                Console
+              </Checkbox>
+            </Flex>
             <Input
               name="gameFilter"
               mr={2}
@@ -201,7 +234,8 @@ const GallerySection = ({ games }) => {
             <Select
               name="monthsSinceRelease"
               ref={register}
-              w={{ base: '100%', md: '50%' }}
+              w={{ base: '100%', md: '40%' }}
+              mr={2}
             >
               <option value="12">Released less than 12 months ago</option>
               <option value="36">Released less than 36 months ago</option>
@@ -266,17 +300,19 @@ const GallerySection = ({ games }) => {
                       highlighted={getValues('gameSort') === 'userScore'}
                     />
                     {game.howLongToBeat &&
-                      game.howLongToBeat.map((time, i) => (
-                        <GalleryDataRow
-                          key={i}
-                          icon={<ClockIcon />}
-                          value={time[1]}
-                          category={time[0]}
-                          highlighted={
-                            i === 0 && getValues('gameSort') === 'timeToBeat'
-                          }
-                        />
-                      ))}
+                      game.howLongToBeat
+                        .slice(0, 2)
+                        .map((time, i) => (
+                          <GalleryDataRow
+                            key={i}
+                            icon={<ClockIcon />}
+                            value={time[1]}
+                            category={time[0]}
+                            highlighted={
+                              i === 0 && getValues('gameSort') === 'timeToBeat'
+                            }
+                          />
+                        ))}
                   </Box>
                 </Flex>
               </Box>
