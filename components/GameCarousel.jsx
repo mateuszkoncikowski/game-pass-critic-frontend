@@ -3,6 +3,16 @@ import Image from 'next/image'
 import { Carousel } from 'react-responsive-carousel'
 
 import { getGameId, getHeroArtImageUrl, getTitle } from '../meta/gamePassGame'
+import ArrowIcon from './ArrowIcon'
+
+const arrowStyles = {
+  position: 'absolute',
+  zIndex: 2,
+  top: 'calc(50% - 15px)',
+  width: 30,
+  height: 30,
+  cursor: 'pointer',
+}
 
 const GameCarousel = ({ games }) => (
   <Box display={{ base: 'none', md: 'block' }}>
@@ -13,6 +23,30 @@ const GameCarousel = ({ games }) => (
       autoPlay
       infiniteLoop
       interval={5000}
+      renderArrowPrev={(onClickHandler, hasPrev, label) =>
+        hasPrev && (
+          <button
+            type="button"
+            onClick={onClickHandler}
+            title={label}
+            style={{ ...arrowStyles, left: 15 }}
+          >
+            <ArrowIcon color="white" direction="left" />
+          </button>
+        )
+      }
+      renderArrowNext={(onClickHandler, hasNext, label) =>
+        hasNext && (
+          <button
+            type="button"
+            onClick={onClickHandler}
+            title={label}
+            style={{ ...arrowStyles, right: 15 }}
+          >
+            <ArrowIcon color="white" direction="right" />
+          </button>
+        )
+      }
     >
       {games.map((carouselGame) => (
         <Box key={getGameId(carouselGame)} position="relative" color="white">
@@ -27,7 +61,7 @@ const GameCarousel = ({ games }) => (
             position="absolute"
             direction="column"
             top="0%"
-            right="5%"
+            right="7%"
             height="100%"
             textAlign="right"
             justifyContent="space-around"

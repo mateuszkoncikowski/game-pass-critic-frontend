@@ -237,7 +237,6 @@ const GallerySection = ({ games }) => {
               name="monthsSinceRelease"
               ref={register}
               w={{ base: '100%', md: '40%' }}
-              mr={2}
             >
               <option value="12">Released less than 12 months ago</option>
               <option value="36">Released less than 36 months ago</option>

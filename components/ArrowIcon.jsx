@@ -1,8 +1,15 @@
 import { Box } from '@chakra-ui/react'
 
+const directions = {
+  up: 0,
+  down: 180,
+  left: 90,
+  right: 270,
+}
+
 const Icon = ({ color, direction = 'down', ...props }) => {
   return (
-    <Box transform={`rotate(${direction === 'down' ? '180' : 0}deg)`}>
+    <Box transform={`rotate(${directions[direction]}deg)`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="35"
