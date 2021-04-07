@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Checkbox,
   Flex,
@@ -37,6 +38,7 @@ import {
   getPlatformsInfo,
   getPosterImageUrl,
   getTitle,
+  isFreshlyAddedGame,
 } from '../meta/gamePassGame'
 import ClockIcon from '../public/clock.svg'
 import CriticScoreIcon from '../public/criticScore.svg'
@@ -222,7 +224,7 @@ const GallerySection = ({ games }) => {
               mr={2}
               mb={{ base: '4', md: '0' }}
               ref={register}
-              placeholder="Select game genre"
+              placeholder="Select genre"
               w={{ base: '100%', md: '40%' }}
             >
               {categories.map((c) => (
@@ -261,7 +263,12 @@ const GallerySection = ({ games }) => {
             const platformsInfo = getPlatformsInfo(game)
 
             return (
-              <Box fontSize="xs" key={getGameId(game)} height="100%">
+              <Box
+                fontSize="xs"
+                key={getGameId(game)}
+                height="100%"
+                position="relative"
+              >
                 <Image
                   alt={getTitle(game)}
                   src={`https:${getPosterImageUrl(game)}`}
@@ -270,6 +277,16 @@ const GallerySection = ({ games }) => {
                   height={363}
                   className="rounded"
                 />
+                {isFreshlyAddedGame(game) ? (
+                  <Badge
+                    colorScheme="green"
+                    position="absolute"
+                    top="5px"
+                    left="5px"
+                  >
+                    Freshly added!
+                  </Badge>
+                ) : null}
                 <Flex pt="2" flexDirection="column">
                   <Heading
                     as="h3"

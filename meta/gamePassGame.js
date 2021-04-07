@@ -1,3 +1,4 @@
+import { differenceInDays } from 'date-fns'
 import {
   equals,
   find,
@@ -27,6 +28,13 @@ export const getPosterImageUrl = pipe(getImage('Poster'), prop('Uri'))
 
 export const getHeroArtImageUrl = pipe(getImage('SuperHeroArt'), prop('Uri'))
 
+const getAvailabilities = pipe(
+  path(['DisplaySkuAvailabilities']),
+  head,
+  path(['Availabilities']),
+  head
+)
+
 export const getPlatformsInfo = (game) => ({
   isConsoleCompatible:
     getTitle(game) === 'Minecraft'
@@ -47,6 +55,23 @@ export const getPlatformsInfo = (game) => ({
     equals('Windows.Desktop')
   )(game),
 })
+
+export const isFresh = pipe(
+  getAvailabilities,
+  path(['Conditions', 'StartDate'])
+)
+
+const getFirstAvailableDate = pipe(
+  prop('DisplaySkuAvailabilities'),
+  head,
+  prop('Sku'),
+  prop('MarketProperties'),
+  head,
+  prop('FirstAvailableDate')
+)
+
+export const isFreshlyAddedGame = (game) =>
+  differenceInDays(new Date(), new Date(getFirstAvailableDate(game))) < 30
 
 export const getTitle = pipe(getLocalizedProps, prop('ProductTitle'))
 
