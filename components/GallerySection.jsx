@@ -203,9 +203,9 @@ const GallerySection = ({ games }) => {
               ref={register}
               w={{ base: '100%', md: '50%' }}
             >
-              <option value="12">released less than 12 months ago</option>
-              <option value="36">released less than 36 months ago</option>
-              <option value={30 * 12}>all</option>
+              <option value="12">Released less than 12 months ago</option>
+              <option value="36">Released less than 36 months ago</option>
+              <option value={30 * 12}>All</option>
             </Select>
           </Flex>
         </Flex>
